@@ -1,14 +1,11 @@
 import mongoDBContainer from "../../container/mongoDBContainer";
-import {products} from "../../../schemas/product";
+import { shoppingCarts } from "../../../schemas/shoppingCart";
 
 
 export default class productDaoMongoDB extends mongoDBContainer{
 
 
     constructor() {
-        super(products);
+        super(shoppingCarts);
     }    
 } 
-
-
-

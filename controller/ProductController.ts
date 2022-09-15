@@ -1,191 +1,148 @@
-import { config } from "../src/daos/index";
-import {products} from "../schemas/product";
+import { productDao  } from '../src/daos/index';
+import { Document, Types } from "mongoose";
 
 
-const type = config.type;
-let productDAO : any;
-
-switch (type) {
-    case "mongoDB":
-
-        import("../src/daos/product/productDaoMongoDB").then( obj => {
-            productDAO =  new obj.productDaoMongoDB(products);
-        });
-                
-        break;
-
-    default:
-        break;
-}
-
-export default class ProductController {
-
-
-    async getAll(){
-
-
-    }
-
-    async getById(){
-
-        
-    }
-
-    async save(){
+    export async function getAll(req:any , res:any){
 
         try {
-            // Notese que CarritoDao no tiene un metodo save
-            // Se hereda del Contenedor
-            const _carrito = await productDAO.save();
-            res.json(_carrito);
-          } catch (err) {
+            const products = await productDao.getAll();
+            if(products){
+    
+                res.json({
+                    'status':'ok',
+                    'message' : 'Lista de productos enviada correctamente',
+                    'code':'200',
+                    'products': products
+                });
+            }else{
+                res.status(400).json({
+                    'status':'nok',
+                    'message' : 'No se encontraron productos',
+                    'code':'400',
+                    'products': null
+                });
+            }
+       
+        } catch (error:any) {
+            res.json({error: error.message});
+        }
+
+    }
+
+    export async function getById(req:any , res:any){
+        
+        try {
+
+            let product_id:any = new Types.ObjectId(req.params.id);
+            const producto:object = await productDao.getById(product_id);
+    
+            if(producto){
+    
+                res.json({
+                    'status':'ok',
+                    'message' : 'Producto enviado correctamente',
+                    'code':'200',
+                    'product': producto
+                });
+            }else{
+                res.status(400).json({
+                    'status':'nok',
+                    'message' : 'Producto no encontrado',
+                    'code':'400',
+                    'product': null
+                });
+            }
+            
+        } catch (error:any) {
+
+            res.status(400).json({error: error.message});
+        }
+    }
+
+    export async function save(req:any , res:any){
+
+        try {
+
+            const product = req.body;
+            const result = await productDao.save(product);
+
+            if(result){
+
+                res.json({
+                    'status':'ok',
+                    'message' : 'Lista de productos entregada correctamente',
+                    'code':'200',
+                    'result': result
+                });
+            }else{
+                res.status(400).json({
+                    'status':'nok',
+                    'message' : 'No se pudo devolver la lista de productos',
+                    'code':'400',
+                    'result': null
+                });
+            }
+            
+        } catch (err : any) {
+
             res.status(400).json({error: err.message});
-          }
+        }
         
     }
-    async updateById(){
+    export async function updateById(req:any , res:any){
 
-        
+        try {
+            
+            const productReq =  req.body;
+            let product_id:any = new Types.ObjectId(req.params.id);
+            const updateProduct = await productDao.updateById(product_id, productReq);
+            
+            if(updateProduct){
+                res.json({
+                    'status':'ok',
+                    'message' : 'Producto editado correctamente',
+                    'code':'200',
+                    'product': updateProduct
+                });
+            }else{
+                res.status(400).json({
+                    'status':'nok',
+                    'message' : 'Error al editar el producto',
+                    'code':'400',
+                    'product': null
+                });
+            }
+
+        } catch (error: any) {
+             res.status(400).json({error: error.message});
+        }
+
     }
 
-    async deleteById(){
+    export async function deleteById(req:any , res:any){
 
-        
+
+        try {
+            
+            let product_id:any = new Types.ObjectId(req.params.id);
+            const deleteProduct = await productDao.deleteById(product_id);
+            if(deleteProduct){
+                res.json({
+                    'status':'ok',
+                    'message' : 'Producto Eliminado correctamente',
+                    'code':'200',
+                });
+            }else{
+                res.status(400).json({
+                    'status':'nok',
+                    'message' : 'No se elimino o no se encontro el producto',
+                    'code':'400',
+                });
+            }
+        } catch (error:any) {
+            res.status(400).json({error: error.message});
+        }
+
     }
 
 
-
-}
-
-
-
-/*
-app.post("/carrito", async (req, res) => {
-    const timestamp = Date.now();
-    const label = req.body.label; // Requerido
-    try {
-      // Notese que CarritoDao no tiene un metodo save
-      // Se hereda del Contenedor
-      const _carrito = await carritoDAO.save({label, timestamp});
-      res.json(_carrito);
-    } catch (err) {
-      res.status(400).json({error: err.message});
-    }
-  });
-
-
-
-
-
-router.get("/", async (req, res) => {
-
-    const products = await product.getAll();
-
-    if(products){
-
-        res.json({
-            'status':'ok',
-            'message' : 'Lista de productos entregada correctamente',
-            'code':'200',
-            'products': products
-        });
-    }else{
-        res.json({
-            'status':'nok',
-            'message' : 'No se pudo devolver la lista de productos',
-            'code':'400',
-            'products': null
-        });
-    }
-});
-
-router.get("/:id", async (req, res) => {
-
-    let product_id:number = parseInt(req.params.id);
-    const producto:object = await product.getById(product_id);
-
-    if(producto){
-
-        res.json({
-            'status':'ok',
-            'message' : 'Producto enviado correctamente',
-            'code':'200',
-            'product': producto
-        });
-    }else{
-        res.json({
-            'status':'nok',
-            'message' : 'Producto no encontrado',
-            'code':'400',
-            'product': null
-        });
-    }
-});
-
-router.post('/', permissions ,async(req, res) => {
-    
-    const productPost =  req.body;
-    const saveProduct = await product.save(productPost);
-    
-    if(saveProduct){
-        res.json({
-            'status':'ok',
-            'message' : 'Producto guardado correctamente',
-            'code':'200',
-            'product': saveProduct
-        });
-    }else{
-        res.json({
-            'status':'nok',
-            'message' : 'Error al guardar el producto',
-            'code':'400',
-            'product': null
-        });
-    }
-});
-
-router.put('/:id', permissions , async(req, res) => {
-
-    const productReq =  req.body;
-    let product_id:number = parseInt(req.params.id);
-    const updateProduct = await product.updateById(product_id, productReq);
-    
-    if(updateProduct){
-        res.json({
-            'status':'ok',
-            'message' : 'Producto editado correctamente',
-            'code':'200',
-            'product': updateProduct
-        });
-    }else{
-        res.json({
-            'status':'nok',
-            'message' : 'Error al editar el producto',
-            'code':'400',
-            'product': null
-        });
-    }
-    
-});
-
-router.delete('/:id', permissions , async(req, res) => {
-
-    let product_id:number = parseInt(req.params.id);
-    const deleteProduct = await product.deleteById(product_id);
-    if(deleteProduct){
-        res.json({
-            'status':'ok',
-            'message' : 'Producto Eliminado correctamente',
-            'code':'200',
-         });
-    }else{
-        res.json({
-            'status':'nok',
-            'message' : 'Error al eliminar el producto',
-            'code':'400',
-        });
-    }
-  
-});
-
-*/

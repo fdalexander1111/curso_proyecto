@@ -1,10 +1,23 @@
 import express from 'express';
 import { Router } from 'express';
-import Cart from '../src/ShoppingCart';
+import {getAll, getById, save, deleteById, getAllProducts, saveProduct } from '../controller/ShoppingCartController';
 
 const router = Router();
-const cart = new Cart('./archivos/shoppingCart.json');
 
+
+router.get("/", getAll);
+router.get("/:id", getById);
+router.post("/", save);
+router.delete("/:id", deleteById);
+router.get("/:id/productos", getAllProducts );
+router.post("/:id/productos", saveProduct );
+
+
+export default router;
+
+
+
+/*
 router.post('/', async (req, res) => {
     
     const cartPost =  req.body;
@@ -111,6 +124,6 @@ router.delete('/:id/productos/:id_prod', async (req, res) => {
   
 });
 
+*/
 
-export default router;
 

@@ -1,24 +1,15 @@
-import express from 'express';
 import { Router } from 'express';
-import Product from '../src/Product';
 import { permissions } from '../middlewares/superadmin';
-import ProductController from '../controller/ProductController';
-
-const controller = new ProductController();
+import {getAll, getById, save, updateById, deleteById } from '../controller/ProductController';
 
 const router = Router();
 
 
-//GET ALL localhost/person
-router.get("/", controller.getAll);
-// GET localhost/person/:id
-router.get("/:id", controller.getById);
-// POST localhost/person
-router.post("/", controller.save);
-// PUT localhost/person/:id
-router.put("/:id", controller.updateById);
-// DELETE localhost/person/:id
-router.delete("/:id", controller.deleteById);
+router.get("/", getAll);
+router.get("/:id", getById);
+router.post("/", permissions, save);
+router.put("/:id", permissions, updateById);
+router.delete("/:id", permissions, deleteById);
 
 
 export default router;

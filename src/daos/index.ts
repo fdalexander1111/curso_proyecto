@@ -1,17 +1,29 @@
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
+let productDao : any;
+let shoppingCartDao : any;
 
-const user = process.env.DATABASE_MONGODB_USER;
-const password = process.env.DATABASE_MONGODB_PASSWORD;
-const database = process.env.DATABASE_MONGODB_NAME;
-const URIString = `mongodb+srv://${user}:${password}@cluster0.zdu2a1t.mongodb.net/${database}?retryWrites=true&w=majority`;
+switch (process.env.DATABASE) {
 
-export const config = {
-    type: process.env.DATABASE,
-    URIString: URIString,
+    case 'firebase':
+        const { default: ProductosDaoFirebase } = await import('./product/productDaoFirebase')
+        const { default: shoppingCartDaoFirebase } = await import('./shoppingCart/shoppingCartDaoFirebase')
+
+        productDao = new ProductosDaoFirebase()
+        shoppingCartDao = new shoppingCartDaoFirebase()
+        break
+
+    case "mongoDB":
+        const { default: productDaoMongoDB } = await import('./product/productDaoMongoDB');
+        productDao = new productDaoMongoDB();
+        
+        const { default: shoppingCartDaoMongoDB } = await import('./shoppingCart/shoppingCartDaoMongoDB');
+        shoppingCartDao = new shoppingCartDaoMongoDB();
+           
+        break
 }
 
+export { productDao, shoppingCartDao }
 
 
 
