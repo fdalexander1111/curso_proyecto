@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 let productDao : any;
 let shoppingCartDao : any;
+let userDao : any;
 
 switch (process.env.DATABASE) {
 
@@ -19,11 +20,14 @@ switch (process.env.DATABASE) {
         
         const { default: shoppingCartDaoMongoDB } = await import('./shoppingCart/shoppingCartDaoMongoDB');
         shoppingCartDao = new shoppingCartDaoMongoDB();
+
+        const { default: userDaoMongoDB } = await import('./user/userDaoMongoDB');
+        userDao = new userDaoMongoDB();
            
         break
 }
 
-export { productDao, shoppingCartDao }
+export { productDao, shoppingCartDao, userDao  }
 
 
 

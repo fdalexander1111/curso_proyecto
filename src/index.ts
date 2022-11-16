@@ -1,6 +1,7 @@
 import express from 'express';
 import routerProduct from '../routes/product';
 import routerShoppingCart from '../routes/shoppingCart';
+import routerUser from '../routes/user';
 
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.static("public"));
 
 app.use("/api/productos", routerProduct);
 app.use("/api/carrito", routerShoppingCart);
+app.use("/api/user", routerUser);
 
 
 app.use((req, res) => {

@@ -48,7 +48,7 @@ export default class firebaseContainer {
           }
       }
   
-      async getById(id:object){
+      async getById(id:any){
           try {
             
               console.log(id);
