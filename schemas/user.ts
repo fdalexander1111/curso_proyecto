@@ -7,7 +7,7 @@ const usersSchema = new mongoose.Schema({
     password: { type: String, required: true, max: 20 },
     name: { type: String, required: true, max: 100 },
     adress: { type: String, required: true, max: 400 },
-    age: { type: Number, required: true, max: 5 },
+    age: { type: Number, required: true},
     phone: { type: String, required: true, max: 15 },
     avatar: { type: String, required: true, max: 400 }
 });

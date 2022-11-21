@@ -95,4 +95,19 @@ export default class mongoDBContainer {
             return false;
         }
     }
+    async getByname(field:string, name:string){
+
+        try {
+            const documents = await this.model.findOne({ [field] : name });
+            if(documents){
+
+                return documents;
+            }else{
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
+
+    }
   }

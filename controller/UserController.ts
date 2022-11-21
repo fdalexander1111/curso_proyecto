@@ -62,6 +62,51 @@ import { Document, Types } from "mongoose";
         }
         
     }
+
+    export async function login(req:any, res:any){
+
+     // vista de login
+     console.log("vista de login");
+    }
+
+    export async function saveLogin(req:any, res:any){
+
+        if(req.body.username){
+            req.session.username = req.body.username;
+            res.redirect('/api/carrito/');
+            console.log("se inicio session");
+        }
+    }
+
+    export async function signup(req:any, res:any){
+
+        //vista de registro
+        console.log("vista de registro");
+    }
+
+    export async function signupSave(req:any, res:any){
+
+        //vista de registro
+        console.log("vista de registro");
+    }
+
+    export async function logout(req:any, res:any){
+
+        //vista de logout
+
+    }
+
+    export async function postLogout(req:any, res:any){
+
+        req.session.destroy((err : any) => {
+            if(err) {
+              res.send("Error al cerrar sesion");
+            } else {
+                res.render("logout");
+            }
+        });
+
+    }
  
 
    
