@@ -7,6 +7,8 @@ const user = process.env.DATABASE_MONGODB_USER;
 const password = process.env.DATABASE_MONGODB_PASSWORD;
 const database = process.env.DATABASE_MONGODB_NAME;
 const URIString = `mongodb+srv://${user}:${password}@cluster0.zdu2a1t.mongodb.net/${database}?retryWrites=true&w=majority`;
+const email = process.env.NOTIFICATION_EMAIL;
+const emailPassword = process.env.NOTIFICATION_EMAIL_PASSWORD;
 
 const config = {
     type: process.env.DATABASE,
@@ -24,6 +26,15 @@ const config = {
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-mtziu%40ecommerce-cc127.iam.gserviceaccount.com"
     },
+
+    ethereal:{
+        host: 'smtp.ethereal.email',
+        port: 587,
+        auth: {
+            user:  `${email}`,
+            pass: `${emailPassword}`
+        }
+    }
 }
 
 export { config };
